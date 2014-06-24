@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<!-- File adapted from demo at https://github.com/PragmaticMates/jquery-final-countdown -->
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="60">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="/static/img/favicon.ico">
+
+  <title>Idle Tracker</title>
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/css/idle.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container countup countup-container">
+    <div id="online-row" class="row hidden">
+      <p class="huge-text text-center">ONLINE</p>
+    </div> <!-- row -->
+    <div id="clock-row" class="clock row hidden">
+      <div class="clock-item clock-hours countup-time-value col-sm-6 col-md-4">
+        <div class="wrap">
+          <div class="inner">
+            <div id="canvas-hours" class="clock-canvas"></div>
+            <div class="text">
+              <p class="val">0</p>
+              <p class="type-hours type-time">HOURS</p>
+            </div> <!-- text -->
+          </div>
+        </div>
+      </div> <!-- clock-item -->
+      <div class="clock-item clock-minutes countup-time-value col-sm-6 col-md-4">
+        <div class="wrap">
+          <div class="inner">
+            <div id="canvas-minutes" class="clock-canvas"></div>
+            <div class="text">
+              <p class="val">0</p>
+              <p class="type-minutes type-time">MINUTES</p>
+            </div> <!-- text -->
+          </div>
+        </div>
+      </div> <!-- clock-item -->
+      <div class="clock-item clock-seconds countup-time-value col-sm-6 col-md-4">
+        <div class="wrap">
+          <div class="inner">
+            <div id="canvas-seconds" class="clock-canvas"></div>
+            <div class="text">
+              <p class="val">0</p>
+              <p class="type-seconds type-time">SECONDS</p>
+            </div> <!-- text -->
+          </div>
+        </div>
+      </div> <!-- clock-item -->
+    </div> <!-- row -->
+  </div> <!-- container -->
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/kinetic.min.js"></script>
+  <script src="/static/js/countup.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      var idleTime;
+      $.ajax({
+        type: "GET",
+        url: "/time/",
+        async: false,
+        success: function(data) {
+          idleTime = data
+        }
+      });
+      if(new Date().getTime() - idleTime < 120000) {
+        $("#online-row").removeClass("hidden");
+      } else {
+        $("#clock-row").removeClass("hidden");
+        $(".countup").countup({
+          'idle': idleTime
+        });
+      }
+    });
+  </script>
+</body>
+</html>
